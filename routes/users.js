@@ -59,17 +59,18 @@ const FIELDS = [
     field: 'nascimento', 
     message: 'Quando nasceu?', 
     format: 'dd-mm-aaaa',
-    validator: function(value) { return validator.matches(value, /\d{2}-\d{2}.\d{4}/gm); }
+    validator: function(value) { return validator.matches(value, /\d{2}\/\d{2}\/\d{4}/gm); }
   },
   { 
     field: 'telefone', 
     message: 'Eu poderia passar trote no seu numero? Então me diz xD', 
     format: '(DDD) 11111-1111',
-    validator: function(value) { return validator.matches(value, /\(\d{3}\)\s\d{5}-\d{4}/gm); }
+    validator: function(value) { return validator.matches(value, /\(\d{2,3}\) \d{5}-\d{4}/gm); }
   },
   { 
-    field: 'incompleto', 
-    message: 'Se não deseja informar tudo, aceite os termos de uso!', 
+    field: 'termos', 
+    required: true, 
+    message: 'Você deve aceitar nossos termos de uso!', 
     format: 'checkbox',
     validator: function(value) { return true; }
   },
@@ -97,7 +98,6 @@ module.exports = function(db) {
 
   router.post('/', async function(req, res, next) {
     if (req.body.email) { req.body.email = req.body.email.trim().toLowerCase(); }
-    if (req.body.password) { req.body.password = await bcrypt.hash(req.body.password, 10); }
     
     db.users.findOne({ email: req.body.email }, function(err, doc) {
       if (doc) {
@@ -111,9 +111,8 @@ module.exports = function(db) {
       var missing = [];
 
       FIELDS.forEach(function (element) {
-        if (element.field == 'incompleto') { return; }
         var value = req.body[element.field];
-        if (!value || !element.validator(value)) { missing.push(element); }
+        if (!value || !(typeof value == 'string') || !element.validator(value)) { missing.push(element); }
       });
 
       var hasAllRequiredFields = missing.filter(m => m.required).length == 0;
@@ -126,6 +125,8 @@ module.exports = function(db) {
           partials: { head: 'head' }
         });
       }
+
+      req.body.password = await bcrypt.hash(req.body.password, 10);
 
       db.users.insert(req.body, (err, doc) => {
         res.render('users-feedback', { 
