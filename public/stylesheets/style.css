@@ -17,3 +17,15 @@ div.app-metric span.subtitle {
   font-size: 50%;
   display: block;
 }
+
+.user-feeback .required {
+  color: red;
+}
+
+.user-feeback table {
+  margin: 50px 0;
+}
+
+a.btn {
+  margin-top: 45px;
+}

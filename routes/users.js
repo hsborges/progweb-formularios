@@ -1,56 +1,147 @@
 var _ = require('lodash');
+var validator = require('validator');
+
 var express = require('express');
 var router = express.Router();
 
+const CURSOS = [
+  'Ciência da Computação', 
+  'Engenharia de Computação',
+  'Engenharia de Software',
+  'Sistemas de Informação',
+  'Análise e Desenvolvimento de Sistemas'
+];
+
 const FIELDS = [
-  { field: 'matricula', type: 'required', message: 'Preciso saber sua matricula :)', format: '1111.1111.111-9' },
-  { field: 'nome', type: 'required', message: 'Qual o nome da sua graça?' },
-  { field: 'email', type: 'required', message: 'E se que quiser te mandar alguns spans lol', format: 'meu@email.com' },
-  { field: 'curso', type: 'required', message: 'Qual sua turma?', format: '[CC|SI|ES|TADS]' },
-  { field: 'apresentacao', type: 'optional', message: 'Apresente-se, queremos saber mais sobre você', format: 'livre' },
-  { field: 'nascimento', type: 'optional', message: 'Quando nasceu?', format: 'dd-mm-aaaa' },
-  { field: 'telefone', type: 'optional', message: 'Eu poderia passar trote no seu numero? Então me diz xD', format: '(DDD) 11111-1111' },
-  { field: 'foto', type: 'optional', message: 'Quer virar modelo? Se mostre para o mundo', format: 'file' },
-  { field: 'incompleto', type: 'required', message: 'Se não deseja informar tudo, aceite os termos de uso!', format: 'checkbox' },
+  { 
+    field: 'matricula', 
+    required: true, 
+    message: 'Preciso saber sua matricula :)', 
+    format: '1111.1111.111-1',
+    validator: function(value) { return validator.matches(value, /\d{4}.\d{4}.\d{3}-\d/gm); }
+  },
+  { 
+    field: 'nome', 
+    required: true, 
+    message: 'Qual o nome da sua graça?',
+    validator: function(value) { return true; }
+  },
+  { 
+    field: 'email', 
+    required: true, 
+    message: 'E se que quiser te mandar alguns spans lol', 
+    format: 'meu@email.com',
+    validator: function(value) { return validator.isEmail(value); }
+  },
+  { 
+    field: 'password', 
+    required: true, 
+    message: 'Proteja-se, não quero dar suas informações para outros', 
+    format: '6+ caracteres',
+    validator: function(value) { return value.length >= 6; }
+  },
+  { 
+    field: 'curso', 
+    required: true, 
+    message: 'Qual sua turma?', 
+    format: CURSOS,
+    validator: function(value) { 
+      return CURSOS.reduce((m,c) => m || (value.trim().toLowerCase() == c.trim().toLowerCase()), false); 
+    }
+  },
+  { 
+    field: 'apresentacao', 
+    message: 'Apresente-se, queremos saber mais sobre você',
+    validator: function(value) { return true; }
+  },
+  { 
+    field: 'nascimento', 
+    message: 'Quando nasceu?', 
+    format: 'dd-mm-aaaa',
+    validator: function(value) { return validator.matches(value, /\d{2}-\d{2}.\d{4}/gm); }
+  },
+  { 
+    field: 'telefone', 
+    message: 'Eu poderia passar trote no seu numero? Então me diz xD', 
+    format: '(DDD) 11111-1111',
+    validator: function(value) { return validator.matches(value, /\(\d{3}\)\s\d{5}-\d{4}/gm); }
+  },
+  { 
+    field: 'incompleto', 
+    message: 'Se não deseja informar tudo, aceite os termos de uso!', 
+    format: 'checkbox',
+    validator: function(value) { return true; }
+  },
 ];
 
 module.exports = function(db) {
 
-  router.post('/', function(req, res, next) {
-    var missing = [];
+  router.delete('/', function(req, res, next) {
+    var criteria = { 
+      email: req.body.email && req.body.email.trim().toLowerCase(), 
+      password: req.body.password, 
+    };
 
-    FIELDS.forEach(function (element) {
-      if (!req.body[element.field]) { missing.push(element); }
+    db.users.findOne(criteria, function(err, doc) {
+      if (!doc) {
+        return res.status(400).render('users-feedback', { 
+          title: 'Usuário não encontrado ou senha incorreta!',
+          error: { not_found: true },
+          partials: { head: 'head' }
+        });
+      }
+
+      db.users.remove(criteria, function(err, n) {
+        res.status(200).send('Usuário removido com sucesso!');
+      });
     });
+  });
 
-    console.log(missing);
+  router.post('/', function(req, res, next) {
+    req.body.email = req.body.email && req.body.email.trim().toLowerCase();
     
+    db.users.findOne({ email: req.body.email }, function(err, doc) {
+      if (doc) {
+        return res.status(400).render('users-feedback', { 
+          title: 'Usuário já cadastrado!',
+          error: { email: true },
+          partials: { head: 'head' }
+        });
+      }
 
-    var hasAllRequiredFields = missing.reduce((m, c) => m && (c.type == 'optional'), true);
+      var missing = [];
 
-    if (!hasAllRequiredFields || (missing.length > 0 && !req.body.incompleto)) {
-      return res.render('users-feedback', { 
-        title: 'Feedback do formulário',
-        missing, 
-        data: res.body,
-        partials: { head: 'head' }
-      });
-    }
-    
-
-    db.users.insert(req.body, (err, doc) => {
-      res.render('users-feedback', { 
-        title: 'Parabéns, seu cadastro foi realizado com sucesso!',
-        missing, 
-        data: doc,
-        partials: { head: 'head' }
+      FIELDS.forEach(function (element) {
+        if (element.field == 'incompleto') { return; }
+        var value = req.body[element.field];
+        if (!value || !element.validator(value)) { missing.push(element); }
       });
 
-      db.users.count({}, function (err, count) {
-        if (err) { 
-          return res.status(500).render('error', { message: 'Database error!', error: err }); 
-        }
-        req.app.get('socket.io').emit('users_update', count);
+      var hasAllRequiredFields = missing.filter(m => m.required).length == 0;
+
+      if (!(hasAllRequiredFields && (missing.length == 0 || req.body.incompleto))) {
+        return res.status(400).render('users-feedback', { 
+          title: 'Feedback do formulário',
+          missing, 
+          data: JSON.stringify(req.body, null, '  '),
+          partials: { head: 'head' }
+        });
+      }
+
+      db.users.insert(req.body, (err, doc) => {
+        res.render('users-feedback', { 
+          title: 'Parabéns, seu cadastro foi realizado com sucesso!',
+          missing, 
+          data: JSON.stringify(doc, null, '  '),
+          partials: { head: 'head' }
+        });
+  
+        db.users.count({}, function (err, count) {
+          if (err) { 
+            return res.status(500).render('error', { message: 'Database error!', error: err }); 
+          }
+          req.app.get('socket.io').emit('users_update', count);
+        });
       });
     });
   });

@@ -7,12 +7,12 @@ var bodyParser = require('body-parser');
 var Datastore = require('nedb');
 var morgan = require('morgan');
 var split = require('split');
+var cors = require('cors');
 
 var db = {
   users: new Datastore({ filename: '.database/users.db', autoload: true }),
   logs: new Datastore({ filename: '.database/logs.db', autoload: true })
 };
-
 
 var indexRouter = require('./routes/index')(db);
 var loginRouter = require('./routes/login');
@@ -31,6 +31,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 var logStream = split().on('data', (data) => {
   db.logs.insert({ type: 'log', data });
@@ -60,7 +61,6 @@ app.use(function(err, req, res, next) {
 
 setTimeout(function() {
   app.get('socket.io').on('connection', function(socket) {
-    console.log('A user connected');
     socket.on('stats', function(callback) {
       db.users.count({}, function(err, users_count) {
         db.logs.count({ type: 'log' }, function(err, logs_count) {
