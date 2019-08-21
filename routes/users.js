@@ -99,7 +99,7 @@ module.exports = function(db) {
   router.post('/', async function(req, res, next) {
     if (req.body.email) { req.body.email = req.body.email.trim().toLowerCase(); }
     
-    db.users.findOne({ email: req.body.email }, function(err, doc) {
+    db.users.findOne({ email: req.body.email }, async function(err, doc) {
       if (doc) {
         return res.status(400).render('users-feedback', { 
           title: 'Usuário já cadastrado!',
