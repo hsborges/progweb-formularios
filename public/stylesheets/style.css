@@ -1,0 +1,19 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+div.app-metric {
+  font-size: 50px;
+  min-height: 125px;
+  padding: 40px 0 20px 0;
+}
+
+div.app-metric span.subtitle {
+  font-size: 50%;
+  display: block;
+}

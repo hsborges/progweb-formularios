@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  {{>head}}
+  <body>
+    <div class="container">
+      <div class="row">
+        {{#data._id}}
+        <div class="col s12 center-align">
+          <h4>Parabéns! Seu usuário foi cadastrado com sucesso!</h4>
+        </div>
+        {{/data._id}}
+        {{^data._id}}
+        <div class="col s12 center-align">
+          <h4>Ops! Tem algo de errado com os dados que você enviou ...</h4>
+        </div>
+        <div class="col s12">
+          <table class="responsive-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Mensagem</th>
+                <th>Formato</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#missing}}  
+              <tr>
+                <td>{{field}}</td>
+                <td>{{type}}</td>
+                <td>{{message}}</td>
+                <td>{{format}}</td>
+              </tr>
+              {{/missing}}
+            </tbody>
+          </table>
+        </div>
+        {{/data._id}}
+        <div class="divider"></div>
+        <div class="center-align"><a class="waves-effect waves-light btn">Voltar</a></div>
+      </div>
+    </div>
+  </body>
+</html>

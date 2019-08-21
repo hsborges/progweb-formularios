@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  {{>head}}
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col s12 m8 offset-m2 l4 xl3 push-xl0">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title center-align"><i class="medium material-icons">cloud_queue</i></span>
+              <div class="divider"></div>
+              <div class="app-metric center-align">
+                <span id="requests-count">?</span><br>
+                <span class="subtitle">requests</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m8 offset-m2 l4 xl3 push-xl1">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title center-align"><i class="medium material-icons">group</i></span>
+              <div class="divider"></div>
+              <div class="app-metric center-align">
+                <span id="users-count">?</span><br>
+                <span class="subtitle">users</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m8 offset-m2 l4 xl3 push-xl2">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title center-align"><i class="medium material-icons">verified_user</i></span>
+              <div class="divider"></div>
+              <div class="app-metric center-align">
+                <span id="login-count">?</span><br>
+                <span class="subtitle">login</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <h3>Requests ao vivo</h3>
+          <div class="divider"></div>
+          <ul id="live">
+            <li id="live-waiting">Aguardando ...</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript">
+      var socket = io();
+      socket.on('users_update', function(total) { $('#users-count').html(total); });
+      socket.on('requests_update', function(total) { $('#requests-count').html(total); });
+      socket.on('login_update', function(total) { $('#login-count').html(total); });
+
+      socket.on('log', function(log) {
+        $('#live').prepend($('<li></li>').text(log));
+        if ($('#live li').length > 25) { $('#live li').last().remove(); }
+        $('#live-waiting').remove();
+      });
+
+      var updateStats = function() {
+        socket.emit('stats', function(stats) {
+          $('#users-count').html(stats.users_count);
+          $('#requests-count').html(stats.logs_count);
+          $('#login-count').html(stats.login_count);
+        });
+      };
+
+      updateStats();
+      setInterval(updateStats, 2000);
+    </script>
+  </body>
+</html>
