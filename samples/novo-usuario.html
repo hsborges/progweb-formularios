@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Formulario</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <style>
+            form { 
+                padding: 15px 35px !important; 
+                margin-top: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div class="container">
+            <div class="row">
+                    <form action="http://localhost:3000/users" method="POST" class="col l8 offset-l2 z-depth-1">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label for="matricula">Matricula</label>
+                                <input id="matricula" type="text" name="matricula" placeholder="1111.1111.111-1" pattern="\d{4}.\d{4}.\d{3}-\d" class="validate" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label for="nome">Nome</label>
+                                <input id="nome" type="text" name="nome" placeholder="Entre com seu nome" class="validate" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label for="email">Email</label>
+                                <input id="email" type="email" name="email" placeholder="meu@email.com" class="validate" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label for="password">Password</label>
+                                <input id="password" type="password" name="password" placeholder="Minimo 6 caracteres" class="validate" pattern="^.{6,}$" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <select name="curso">
+                                    <option value="" disabled selected>Selecione uma opção</option>
+                                    <option value="Ciência da Computação">Ciência da Computação</option>
+                                    <option value="Engenharia de Computação">Engenharia de Computação</option>
+                                    <option value="Engenharia de Software">Engenharia de Software</option>
+                                    <option value="Sistemas de Informação">Sistemas de Informação</option>
+                                    <option value="Análise e Desenvolvimento de Sistemas">Análise e Desenvolvimento de Sistemas</option>
+                                </select>
+                                <label>Curso</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label for="apresentacao">Apresentacao</label>
+                                <textarea id="apresentacao" name="apresentacao" placeholder="Diga-me um pouco sobre você" class="materialize-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label for="nascimento">Data de nascimento</label>
+                                <input id="nascimento" type="text" name="nascimento" placeholder="dd/mm/aaaa" pattern="\d{2}/\d{2}/\d{4}$" class="validate">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label for="telefone">Numero de telefone</label>
+                                <input id="telefone" type="tel" name="telefone" placeholder="(DDD) 11111-1111" pattern="\(\d{2,3}\) \d{5}-\d{4}" class="validate">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <label>
+                                    <input id="termos" type="checkbox" name="termos" class="filled-in" >
+                                    <span>Aceito os termos de uso</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row right-align">
+                            <button type="submit" class="btn">Enviar</button>
+                        </div>
+                    </form>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <script>
+            $(document).ready(function(){ $('select').formSelect();});
+        </script>
+    </body>
+
+
+</html>
