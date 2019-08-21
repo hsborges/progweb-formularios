@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var bcrypt = require('bcrypt');
 var validator = require('validator');
 
 var express = require('express');
@@ -76,14 +77,11 @@ const FIELDS = [
 
 module.exports = function(db) {
 
-  router.delete('/', function(req, res, next) {
-    var criteria = { 
-      email: req.body.email && req.body.email.trim().toLowerCase(), 
-      password: req.body.password, 
-    };
+  router.delete('/', async function(req, res, next) {
+    if (req.body.email) { req.body.email = req.body.email.trim().toLowerCase(); }
 
-    db.users.findOne(criteria, function(err, doc) {
-      if (!doc) {
+    db.users.findOne({ email: req.body.email }, async function(err, doc) {
+      if (!doc || !(await bcrypt.compare(req.body.password, doc.password))) {
         return res.status(400).render('users-feedback', { 
           title: 'Usuário não encontrado ou senha incorreta!',
           error: { not_found: true },
@@ -91,14 +89,15 @@ module.exports = function(db) {
         });
       }
 
-      db.users.remove(criteria, function(err, n) {
+      db.users.remove({ _id: doc._id }, function(err, n) {
         res.status(200).send('Usuário removido com sucesso!');
       });
     });
   });
 
-  router.post('/', function(req, res, next) {
-    req.body.email = req.body.email && req.body.email.trim().toLowerCase();
+  router.post('/', async function(req, res, next) {
+    if (req.body.email) { req.body.email = req.body.email.trim().toLowerCase(); }
+    if (req.body.password) { req.body.password = await bcrypt.hash(req.body.password, 10); }
     
     db.users.findOne({ email: req.body.email }, function(err, doc) {
       if (doc) {
