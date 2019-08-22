@@ -15,7 +15,7 @@ var db = {
 };
 
 var indexRouter = require('./routes/index')(db);
-var loginRouter = require('./routes/login');
+var loginRouter = require('./routes/login')(db);
 var usersRouter = require('./routes/users')(db);
 
 var app = express();

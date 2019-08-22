@@ -78,20 +78,12 @@ const FIELDS = [
 
 module.exports = function(db) {
 
-  router.delete('/', async function(req, res, next) {
-    if (req.body.email) { req.body.email = req.body.email.trim().toLowerCase(); }
-
-    db.users.findOne({ email: req.body.email }, async function(err, doc) {
-      if (!doc || !(await bcrypt.compare(req.body.password, doc.password))) {
-        return res.status(400).render('users-feedback', { 
-          title: 'Usuário não encontrado ou senha incorreta!',
-          error: { not_found: true },
-          partials: { head: 'head' }
-        });
-      }
-
-      db.users.remove({ _id: doc._id }, function(err, n) {
-        res.status(200).send('Usuário removido com sucesso!');
+  router.post('/delete', async function(req, res, next) {
+    db.users.remove({ _id: req.body.id }, function(err, n) {
+      return res.status(400).render('users-feedback', { 
+        title: n > 0 ? 'Usuário removido com sucesso!' : 'Usuário não encontrado!',
+        error: { not_found: (n == 0) },
+        partials: { head: 'head' }
       });
     });
   });
