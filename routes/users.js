@@ -109,7 +109,7 @@ module.exports = function(db) {
 
       var hasAllRequiredFields = missing.filter(m => m.required).length == 0;
 
-      if (!(hasAllRequiredFields && (missing.length == 0 || req.body.incompleto))) {
+      if (!(hasAllRequiredFields && (missing.length == 0 || req.body.termos))) {
         return res.status(400).render('users-feedback', { 
           title: 'Feedback do formulário',
           missing, 
