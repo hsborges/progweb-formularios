@@ -58,7 +58,7 @@ const FIELDS = [
   { 
     field: 'nascimento', 
     message: 'Quando nasceu?', 
-    format: 'dd-mm-aaaa',
+    format: 'dd/mm/aaaa',
     validator: function(value) { return validator.matches(value, /\d{2}\/\d{2}\/\d{4}/gm); }
   },
   { 
