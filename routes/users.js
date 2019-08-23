@@ -104,7 +104,7 @@ module.exports = function(db) {
 
       FIELDS.forEach(function (element) {
         var value = req.body[element.field];
-        if (!value || !(typeof value == 'string') || !element.validator(value)) { missing.push(element); }
+        if (!(typeof value == 'string') || !element.validator(value)) { missing.push(element); }
       });
 
       var hasAllRequiredFields = missing.filter(m => m.required).length == 0;
