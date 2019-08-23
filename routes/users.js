@@ -82,7 +82,7 @@ module.exports = function(db) {
     db.users.remove({ _id: req.body.id }, function(err, n) {
       return res.status(400).render('users-feedback', { 
         title: n > 0 ? 'Usuário removido com sucesso!' : 'Usuário não encontrado!',
-        error: { not_found: (n == 0) },
+        error: { removed: (n > 0) },
         partials: { head: 'head' }
       });
     });

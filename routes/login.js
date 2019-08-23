@@ -23,6 +23,8 @@ module.exports = function (db) {
       var isSame = await bcrypt.compare(req.body.password, doc.password);
       if (isSame) { doc = _.map(doc, function(value,key) { return { field: _.capitalize(key), value: value }; }); };
 
+      db.logs.insert({ type: 'login', email: req.body.email });
+
       return res.status(200).render('users-details', {
         title: 'Usuário encontrado!',
         data: isSame ? doc : null,

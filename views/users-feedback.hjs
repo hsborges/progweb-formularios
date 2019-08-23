@@ -9,11 +9,11 @@
           <h4>Email não cadastrado ou senha incorreta!</h4>
         </div>
         {{/ error.not_found}}
-        {{^ error.not_found}}
+        {{# error.removed}}
         <div class="col s12 center-align">
           <h4>Usuário removido com sucesso!</h4>
         </div>
-        {{/ error.not_found}}
+        {{/ error.removed}}
         {{# error.email}}
           <div class="col s12 center-align">
             <h4>Email já cadastrado!</h4>

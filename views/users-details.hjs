@@ -18,7 +18,7 @@
       </div>
       <div class="row">
         <div class="col s6 left-align"><a class="waves-effect waves-light btn voltar">Voltar</a></div>
-        <form action="http://localhost:3000/users/delete" method="POST">
+        <form action="/users/delete" method="POST">
           <input type="hidden" name="id" value="{{id}}">
           <div class="col s6 right-align"><button type="submit" class="waves-effect waves-light btn red darken-3">Deletar</button></div>
         </form>
