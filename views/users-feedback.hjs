@@ -1,99 +1,102 @@
 <!DOCTYPE html>
 <html>
-  {{>head}}
-  <body>
-    <div class="container user-feeback">
-      <div class="row">
-        {{# error.not_found}}
-        <div class="col s12 center-align">
-          <h4>Email não cadastrado ou senha incorreta!</h4>
-        </div>
-        {{/ error.not_found}}
-        {{# error.removed}}
-        <div class="col s12 center-align">
-          <h4>Usuário removido com sucesso!</h4>
-        </div>
-        {{/ error.removed}}
-        {{# error.email}}
-          <div class="col s12 center-align">
-            <h4>Email já cadastrado!</h4>
-          </div>
-          <br><br>
-          <div class="col s12">
-              Para criar um novo usuário com este email você deve:
-              <ul>
-                <li>Usar o método "PUT" e informar a senha atual para atualizar o registro; ou</li>
-                <li>Usar o método "DELETE" e informar a senha atual para deletar o registro; ou</li>
-                <li>Solicitar ao professor a remoção manual :(</li>
-              </ul>
-          </div>
-          <br><br>
-        {{/ error.email}}
-        {{^ error}}
-          {{^ missing.length}}
-          <div class="col s12 center-align">
-            <h4>Parabéns! Seu usuário foi cadastrado com sucesso!</h4>
-          </div>
-          <div class="col s12">
-            <pre><code class="json">{{data}}</code></pre>
-          </div>
-          {{/ missing.length}}
-          {{# missing.length}}
-          <div class="col s12 center-align">
-            <h4>Ops! Tem algo de errado com os dados que você enviou ...</h4>
-          </div>
-          <div class="col s12">
-            <table class="responsive-table">
-              <thead>
-                <tr>
-                  <th>Campo</th>
-                  <th>Tipo</th>
-                  <th>Mensagem</th>
-                  <th>Formato</th>
-                </tr>
-              </thead>
-              <tbody>
-                {{#missing}}  
-                <tr>
-                  <td>{{field}}</td>
-                  <td>
-                    {{#required}} <span class="required">Obrigatório</span> {{/required}}
-                    {{^required}} Opcional {{/required}}
-                  </td>
-                  <td>{{message}}</td>
-                  <td>
-                    {{#format.length}}
-                      {{#format}}
-                        <li>{{.}}</li>
-                      {{/format}}
-                    {{/format.length}}
-                    {{^format.length}}
-                      {{format}}
-                    {{/format.length}}
-                  </td>
-                </tr>
-                {{/missing}}
-              </tbody>
-            </table>
-          </div>
-          <div class="col s12 center-align">
-            <h5>Informações recebidas pelo servidor</h5>
-          </div>
-          <div class="col s12">
-            <pre><code class="json">{{data}}</code></pre>
-          </div>
-          {{/ missing.length}}
-        {{/ error}}
-        <div class="center-align"><a class="waves-effect waves-light btn">Voltar</a></div>
-      </div>
-    </div>
+{{>head}}
 
-    <link rel="stylesheet"href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
-    <script>
-      hljs.initHighlightingOnLoad();
-      $('a.btn').click(function() { console.log('clicado!'); window.history.back(); });
-    </script>
-  </body>
+<body>
+  <div class="container user-feeback">
+    <div class="row">
+      {{# error.not_found}}
+      <div class="col s12 center-align">
+        <h4>Email não cadastrado ou senha incorreta!</h4>
+      </div>
+      {{/ error.not_found}}
+      {{# error.removed}}
+      <div class="col s12 center-align">
+        <h4>Usuário removido com sucesso!</h4>
+      </div>
+      {{/ error.removed}}
+      {{# error.email}}
+      <div class="col s12 center-align">
+        <h4>Email já cadastrado!</h4>
+      </div>
+      <br><br>
+      <div class="col s12">
+        Para criar um novo usuário com este email você deve:
+        <ul>
+          <li>Usar o método "PUT" e informar a senha atual para atualizar o registro; ou</li>
+          <li>Usar o método "DELETE" e informar a senha atual para deletar o registro; ou</li>
+          <li>Solicitar ao professor a remoção manual :(</li>
+        </ul>
+      </div>
+      <br><br>
+      {{/ error.email}}
+      {{^ error}}
+      {{^ missing.length}}
+      <div class="col s12 center-align">
+        <h4>Parabéns! Seu usuário foi cadastrado com sucesso!</h4>
+      </div>
+      <div class="col s12">
+        <pre><code class="json">{{data}}</code></pre>
+      </div>
+      {{/ missing.length}}
+      {{# missing.length}}
+      <div class="col s12 center-align">
+        <h4>Ops! Tem algo de errado com os dados que você enviou ...</h4>
+      </div>
+      <div class="col s12">
+        <table class="responsive-table">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Tipo</th>
+              <th>Mensagem</th>
+              <th>Formato</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#missing}}
+            <tr>
+              <td>{{field}}</td>
+              <td>
+                {{#required}} <span class="required">Obrigatório</span> {{/required}}
+                {{^required}} Opcional {{/required}}
+              </td>
+              <td>{{message}}</td>
+              <td>
+                {{#format.length}}
+                {{#format}}
+                <li>{{.}}</li>
+                {{/format}}
+                {{/format.length}}
+                {{^format.length}}
+                {{format}}
+                {{/format.length}}
+              </td>
+            </tr>
+            {{/missing}}
+          </tbody>
+        </table>
+      </div>
+      <div class="col s12 center-align">
+        <h5>Informações recebidas pelo servidor</h5>
+      </div>
+      <div class="col s12">
+        <pre><code class="json">{{data}}</code></pre>
+      </div>
+      {{/ missing.length}}
+      {{/ error}}
+      <div class="center-align"><a class="waves-effect waves-light btn">Voltar</a></div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+    $('a.btn').click(function () { console.log('clicado!'); window.history.back(); });
+  </script>
+</body>
+
 </html>

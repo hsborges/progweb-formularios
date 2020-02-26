@@ -61,5 +61,5 @@ typings/
 .next
 
 # ignore nedb files
-.database
+.database/**/*.db
 .tmp

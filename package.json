@@ -1,7 +1,7 @@
 {
-  "name": "progweb-login",
-  "version": "0.0.0",
-  "private": true,
+  "name": "progweb-formularios",
+  "version": "0.0.1",
+  "private": false,
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www"

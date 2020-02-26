@@ -5,31 +5,35 @@ var validator = require('validator');
 var express = require('express');
 var router = express.Router();
 
-
-module.exports = function (db) {
-
+module.exports = function(db) {
   router.post('/', function(req, res, next) {
-    if (req.body.email) { req.body.email = req.body.email.trim().toLowerCase(); }
- 
+    if (req.body.email) {
+      req.body.email = req.body.email.trim().toLowerCase();
+    }
+
     db.users.findOne({ email: req.body.email }, async function(err, doc) {
       if (!doc) {
         return res.status(200).render('users-details', {
-          title: 'Usuário não encontrado ou senha incorreta!', 
-          partials: { head: 'head' }
+          title: 'Usuário não encontrado ou senha incorreta!',
+          partials: { head: 'head' },
         });
       }
 
       var id = doc._id;
       var isSame = await bcrypt.compare(req.body.password, doc.password);
-      if (isSame) { doc = _.map(doc, function(value,key) { return { field: _.capitalize(key), value: value }; }); };
+      if (isSame) {
+        doc = _.map(doc, function(value, key) {
+          return { field: _.capitalize(key), value: value };
+        });
+      }
 
       db.logs.insert({ type: 'login', email: req.body.email });
 
       return res.status(200).render('users-details', {
         title: 'Usuário encontrado!',
         data: isSame ? doc : null,
-        id, 
-        partials: { head: 'head' }
+        id,
+        partials: { head: 'head' },
       });
     });
   });

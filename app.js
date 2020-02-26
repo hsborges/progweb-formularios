@@ -11,7 +11,7 @@ var cors = require('cors');
 
 var db = {
   users: new Datastore({ filename: '.database/users.db', autoload: true }),
-  logs: new Datastore({ filename: '.database/logs.db', autoload: true })
+  logs: new Datastore({ filename: '.database/logs.db', autoload: true }),
 };
 
 var indexRouter = require('./routes/index')(db);
@@ -71,6 +71,6 @@ setTimeout(function() {
       });
     });
   });
-})
+});
 
 module.exports = app;

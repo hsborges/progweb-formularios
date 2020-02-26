@@ -1,53 +1,57 @@
 <!DOCTYPE html>
 <html>
-  {{>head}}
-  <body>
-    <div class="container user-feeback">
-      {{# data.length}}
-      <div class="row">
-        <table class="col s12">
-          <tbody>
-            {{# data}}
-            <tr>
-              <td><strong>{{field}}</strong></td>
-              <td>{{value}}</td>
-            </tr>
-            {{/ data}}
-          </tbody>
-        </table>
-      </div>
-      <div class="row">
-        <div class="col s6 left-align"><a class="waves-effect waves-light btn voltar">Voltar</a></div>
-        <form action="/users/delete" method="POST">
-          <input type="hidden" name="id" value="{{id}}">
-          <div class="col s6 right-align"><button type="submit" class="waves-effect waves-light btn red darken-3">Deletar</button></div>
-        </form>
-      </div>
-      {{/ data.length}}
-      {{^ data.length}}
-        <div class="row">
-          <div class="center-align">
-            <h3>Usuário não encontrado ou senha incorreta!</h3>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s12 center-align"><a class="waves-effect waves-light btn voltar">Voltar</a></div>
-        </div>
-      {{/ data.length}}
+{{>head}}
+
+<body>
+  <div class="container user-feeback">
+    {{# data.length}}
+    <div class="row">
+      <table class="col s12">
+        <tbody>
+          {{# data}}
+          <tr>
+            <td><strong>{{field}}</strong></td>
+            <td>{{value}}</td>
+          </tr>
+          {{/ data}}
+        </tbody>
+      </table>
     </div>
+    <div class="row">
+      <div class="col s6 left-align"><a class="waves-effect waves-light btn voltar">Voltar</a></div>
+      <form action="/users/delete" method="POST">
+        <input type="hidden" name="id" value="{{id}}">
+        <div class="col s6 right-align"><button type="submit"
+            class="waves-effect waves-light btn red darken-3">Deletar</button></div>
+      </form>
+    </div>
+    {{/ data.length}}
+    {{^ data.length}}
+    <div class="row">
+      <div class="center-align">
+        <h3>Usuário não encontrado ou senha incorreta!</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12 center-align"><a class="waves-effect waves-light btn voltar">Voltar</a></div>
+    </div>
+    {{/ data.length}}
+  </div>
 
-    <style>
-      form {
-        padding-top: 40px;
-        padding-bottom: 40px;
-      }
-    </style>
+  <style>
+    form {
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+  </style>
 
-    <link rel="stylesheet"href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
-    <script>
-      $('a.btn.voltar').click(function() { console.log('clicado!'); window.history.back(); });
-    </script>
-  </body>
+  <script>
+    $('a.btn.voltar').click(function () { console.log('clicado!'); window.history.back(); });
+  </script>
+</body>
+
 </html>
