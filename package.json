@@ -21,6 +21,6 @@
     "socket.io": "^2.2.0",
     "split": "^1.0.1",
     "sqlite3": "^4.1.0",
-    "validator": "^11.1.0"
+    "validator": "^13.7.0"
   }
 }
